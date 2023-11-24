@@ -8,15 +8,24 @@ cam = cv2.VideoCapture(0)
 
 
 def UART_read(ser):
+    """
+    serのポートから1行読出し、プリント、
+    """
     line = ser.read()
     print(line)
 
 
 def UART_send(ser):
+    """
+    serのポートに書き出し
+    """
     ser.write(str.encode(input()))
 
 
 def UART_read_write():
+    """
+    serポートを定義、0.5sごとにUART_read()を呼ぶ。
+    """
     ser = serial.Serial("COM3", timeout=None)
     while True:
         # UART_send(ser)
@@ -25,6 +34,9 @@ def UART_read_write():
     
 
 def cam_read(from_):
+    """
+    from_のカメラから読み、captureというウィンドウに表示
+    """
     try:
         while True:
             ret, flame = from_.read()
@@ -36,12 +48,18 @@ def cam_read(from_):
 
 
 def cam_capture(from_):
+    """
+    from_のカメラで受け取った画像を、/dataにget_capture.pngとして保存する。
+    """
     ret, flame = from_.read()
     cv2.imwrite("data/get_capture.png", flame)
     return 0
 
 
 def cam_capture_or_ret(flame):
+    """
+    10msごとに、何か入力がないか確認する。
+    """
     key = cv2.waitKey(10)
     if key == 13:
         cv2.imwrite("data/get_capture.png", flame)
@@ -50,6 +68,9 @@ def cam_capture_or_ret(flame):
 
 
 def check_ID():
+    """
+    ポートチェック
+    """
     import serial.tools.list_ports
 
     ports = list(serial.tools.list_ports.comports())
@@ -73,10 +94,13 @@ def is_need_resque(ser):
     fixme: startなどの信号文字列にして、誤検知を防ぐ
     """
     header = UART_read(ser)
-    return header == "S"
+    return header == "NEED HELP"
 
 
 def get_picture(ser):
+    """
+    is_need_resqueならば、camを起動して、capture
+    """
     if is_need_resque(ser):
         cam_capture()
     return 0
