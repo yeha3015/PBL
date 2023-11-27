@@ -9,9 +9,9 @@ cam = cv2.VideoCapture(0)
 
 def UART_read(ser):
     """
-    serのポートから1行読出し、プリント、
+    serのポートから1文字読出し、プリント、
     """
-    line = ser.read()
+    line = ser.readline()
     print(line)
 
 
@@ -26,12 +26,17 @@ def UART_read_write():
     """
     serポートを定義、0.5sごとにUART_read()を呼ぶ。
     """
-    ser = serial.Serial("COM3", timeout=None)
-    while True:
-        # UART_send(ser)
-        time.sleep(0.5)
-        UART_read(ser)
-    
+    ser = serial.Serial("COM3", 115200, timeout=5)
+    try:
+        while True:
+            # UART_send(ser)
+            # time.sleep(0.5)
+            print("reading...")
+            UART_read(ser)
+    except KeyboardInterrupt:
+        print("key interrupt detected")
+        return 0
+
 
 def cam_read(from_):
     """
@@ -106,7 +111,6 @@ def get_picture(ser):
     return 0
 
 
-
 # check_ID()
-# UART_read_write()
+UART_read_write()
 # cam_read(cam)
