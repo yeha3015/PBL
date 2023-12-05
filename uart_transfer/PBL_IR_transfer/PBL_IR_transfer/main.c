@@ -8,6 +8,7 @@
  *D3 TX
  *B0 B0
  *B1 1
+ 54(T) 3F(?), 92
  */ 
 
 
@@ -33,7 +34,15 @@ int uart1_send_strings(char *string){
 	while(string[i] != '\0'){
 		UART1_Byte_Send(string[i++]);
 	}
-	return i;
+	return 0;
+}
+
+int uart1_send_uint8t(uint8_t *data){
+	int i = 0;
+	while(data[i] != 0xFF){
+		UART1_Byte_Send(data[i++]);
+	}
+	return 0;
 }
 
 int init_arr(uint8_t *arr, int length){
@@ -72,17 +81,16 @@ int check_signal(uint8_t *data){
 	return data[DATA_LENGTH - 1] == Calc_CheckSum(data);
 }
 
-uint8_t make_transit_signal(uint8_t *data){
+uint8_t* make_transit_signal(uint8_t *data, uint8_t ret[4]){
 	/*
 	fixme: null data
-	*/
-	uint8_t ret[DATA_LENGTH]; //data[2]‚É‚µ‚½‚¢
-	init_arr(ret, DATA_LENGTH);
-	ret[0] = 0xa5;
-	for(int i = 0; i < DATA_LENGTH - 5; i++){
-		//ret[i] = 0xa5;
+	*///data[2]‚É‚µ‚½‚¢
+	//init_arr(ret, DATA_LENGTH);
+	ret[0] = 0xA5;
+	for(int i = 0; i < 3; i++){
+		ret[i] = data[i + 3];
 	}
-	data[DATA_LENGTH - 2] = '\0';
+	ret[3] = 0xFF;
 	return ret;
 }
 
@@ -113,19 +121,35 @@ int main(void)
 			data[i] =  make_byte();
 			_delay_ms(WAIT_TIME_MS);
 		}
+		uint8_t send_data[4] = {0x00, 0x00, 0x00, 0xFF};
 		data[DATA_LENGTH] = '\0';
 		if(!check_signal(data)){
 			uart1_send_strings("Data was broken");
-			//continue;
+			uart1_send_strings("\r\n");
+			continue;
 		}
-		uart1_send_strings(data);
+		uart1_send_uint8t(make_transit_signal(data, send_data));
 		uart1_send_strings("\r\n");
-		uart1_send_strings(make_transit_signal(data));
-		//uart1_send_strings(data);
-		uart1_send_strings("\r\n");
-		//UART1_Byte_Send((char)send_byte);
-		//_delay_ms(500);
+		_delay_ms(500);
     }
 	
 }
 
+/*
+	while(1){
+		//uart1_send_strings("start");
+		//UART1_Byte_Send(0xA5);
+		//uart1_send_strings("\n");
+		_delay_ms(100);
+		uint8_t d[8]  = {0xA5, 0x5A, 0x10, 0x01, 0x11, 0x12, 0x21, 0x0A};
+		uint8_t ret[4] = {0x00, 0x00, 0x00, 0xFF};
+		uart1_send_uint8t(make_transit_signal(d, ret));
+		uart1_send_strings("\n");
+		//uart1_send_strings("\n");
+		PORTB = 0x02;
+		_delay_ms(100);
+		PORTB = 0x00;
+		//uart1_send_strings(d);
+		_delay_ms(800);
+	}
+*/

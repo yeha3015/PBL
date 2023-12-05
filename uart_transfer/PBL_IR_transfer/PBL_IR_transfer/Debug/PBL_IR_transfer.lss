@@ -3,29 +3,29 @@ PBL_IR_transfer.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000014  00800100  000002fe  00000372  2**0
+  0 .data         00000014  00800100  00000326  0000039a  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         000002fe  00000000  00000000  00000074  2**1
+  1 .text         00000326  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .comment      00000030  00000000  00000000  00000386  2**0
+  2 .comment      00000030  00000000  00000000  000003ae  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000003b8  2**2
+  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000003e0  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000098  00000000  00000000  000003f8  2**0
+  4 .debug_aranges 000000a0  00000000  00000000  00000420  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   000010f9  00000000  00000000  00000490  2**0
+  5 .debug_info   0000113b  00000000  00000000  000004c0  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 00000cc5  00000000  00000000  00001589  2**0
+  6 .debug_abbrev 00000cc5  00000000  00000000  000015fb  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   000006ef  00000000  00000000  0000224e  2**0
+  7 .debug_line   00000723  00000000  00000000  000022c0  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  0000016c  00000000  00000000  00002940  2**2
+  8 .debug_frame  00000174  00000000  00000000  000029e4  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    00000655  00000000  00000000  00002aac  2**0
+  9 .debug_str    00000671  00000000  00000000  00002b58  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    00000545  00000000  00000000  00003101  2**0
+ 10 .debug_loc    000005af  00000000  00000000  000031c9  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000090  00000000  00000000  00003646  2**0
+ 11 .debug_ranges 00000098  00000000  00000000  00003778  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -87,16 +87,16 @@ Disassembly of section .text:
   b8:	11 e0       	ldi	r17, 0x01	; 1
   ba:	a0 e0       	ldi	r26, 0x00	; 0
   bc:	b1 e0       	ldi	r27, 0x01	; 1
-  be:	ee ef       	ldi	r30, 0xFE	; 254
-  c0:	f2 e0       	ldi	r31, 0x02	; 2
+  be:	e6 e2       	ldi	r30, 0x26	; 38
+  c0:	f3 e0       	ldi	r31, 0x03	; 3
   c2:	02 c0       	rjmp	.+4      	; 0xc8 <__do_copy_data+0x10>
   c4:	05 90       	lpm	r0, Z+
   c6:	0d 92       	st	X+, r0
   c8:	a4 31       	cpi	r26, 0x14	; 20
   ca:	b1 07       	cpc	r27, r17
   cc:	d9 f7       	brne	.-10     	; 0xc4 <__do_copy_data+0xc>
-  ce:	0e 94 05 01 	call	0x20a	; 0x20a <main>
-  d2:	0c 94 7d 01 	jmp	0x2fa	; 0x2fa <_exit>
+  ce:	0e 94 10 01 	call	0x220	; 0x220 <main>
+  d2:	0c 94 91 01 	jmp	0x322	; 0x322 <_exit>
 
 000000d6 <__bad_interrupt>:
   d6:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -132,7 +132,7 @@ int uart1_send_strings(char *string){
   f4:	03 c0       	rjmp	.+6      	; 0xfc <uart1_send_strings+0x16>
 		UART1_Byte_Send(string[i++]);
   f6:	21 96       	adiw	r28, 0x01	; 1
-  f8:	0e 94 76 01 	call	0x2ec	; 0x2ec <UART1_Byte_Send>
+  f8:	0e 94 8a 01 	call	0x314	; 0x314 <UART1_Byte_Send>
     CLKPR = 0;
 }
 
@@ -147,417 +147,460 @@ int uart1_send_strings(char *string){
  106:	f7 cf       	rjmp	.-18     	; 0xf6 <uart1_send_strings+0x10>
 		UART1_Byte_Send(string[i++]);
 	}
-	return i;
+	return 0;
 }
- 108:	ce 01       	movw	r24, r28
- 10a:	df 91       	pop	r29
- 10c:	cf 91       	pop	r28
- 10e:	1f 91       	pop	r17
- 110:	0f 91       	pop	r16
- 112:	08 95       	ret
+ 108:	80 e0       	ldi	r24, 0x00	; 0
+ 10a:	90 e0       	ldi	r25, 0x00	; 0
+ 10c:	df 91       	pop	r29
+ 10e:	cf 91       	pop	r28
+ 110:	1f 91       	pop	r17
+ 112:	0f 91       	pop	r16
+ 114:	08 95       	ret
 
-00000114 <init_arr>:
+00000116 <uart1_send_uint8t>:
+
+int uart1_send_uint8t(uint8_t *data){
+ 116:	0f 93       	push	r16
+ 118:	1f 93       	push	r17
+ 11a:	cf 93       	push	r28
+ 11c:	df 93       	push	r29
+ 11e:	8c 01       	movw	r16, r24
+	int i = 0;
+ 120:	c0 e0       	ldi	r28, 0x00	; 0
+ 122:	d0 e0       	ldi	r29, 0x00	; 0
+	while(data[i] != 0xFF){
+ 124:	03 c0       	rjmp	.+6      	; 0x12c <uart1_send_uint8t+0x16>
+		UART1_Byte_Send(data[i++]);
+ 126:	21 96       	adiw	r28, 0x01	; 1
+ 128:	0e 94 8a 01 	call	0x314	; 0x314 <UART1_Byte_Send>
+	return 0;
+}
+
+int uart1_send_uint8t(uint8_t *data){
+	int i = 0;
+	while(data[i] != 0xFF){
+ 12c:	f8 01       	movw	r30, r16
+ 12e:	ec 0f       	add	r30, r28
+ 130:	fd 1f       	adc	r31, r29
+ 132:	80 81       	ld	r24, Z
+ 134:	8f 3f       	cpi	r24, 0xFF	; 255
+ 136:	b9 f7       	brne	.-18     	; 0x126 <uart1_send_uint8t+0x10>
+		UART1_Byte_Send(data[i++]);
+	}
+	return 0;
+}
+ 138:	80 e0       	ldi	r24, 0x00	; 0
+ 13a:	90 e0       	ldi	r25, 0x00	; 0
+ 13c:	df 91       	pop	r29
+ 13e:	cf 91       	pop	r28
+ 140:	1f 91       	pop	r17
+ 142:	0f 91       	pop	r16
+ 144:	08 95       	ret
+
+00000146 <init_arr>:
 
 int init_arr(uint8_t *arr, int length){
 	for(int i = 0; i < length; i++){
- 114:	20 e0       	ldi	r18, 0x00	; 0
- 116:	30 e0       	ldi	r19, 0x00	; 0
- 118:	06 c0       	rjmp	.+12     	; 0x126 <init_arr+0x12>
+ 146:	20 e0       	ldi	r18, 0x00	; 0
+ 148:	30 e0       	ldi	r19, 0x00	; 0
+ 14a:	06 c0       	rjmp	.+12     	; 0x158 <init_arr+0x12>
 		arr[i] = 0x00;
- 11a:	fc 01       	movw	r30, r24
- 11c:	e2 0f       	add	r30, r18
- 11e:	f3 1f       	adc	r31, r19
- 120:	10 82       	st	Z, r1
+ 14c:	fc 01       	movw	r30, r24
+ 14e:	e2 0f       	add	r30, r18
+ 150:	f3 1f       	adc	r31, r19
+ 152:	10 82       	st	Z, r1
 	}
-	return i;
+	return 0;
 }
 
 int init_arr(uint8_t *arr, int length){
 	for(int i = 0; i < length; i++){
- 122:	2f 5f       	subi	r18, 0xFF	; 255
- 124:	3f 4f       	sbci	r19, 0xFF	; 255
- 126:	26 17       	cp	r18, r22
- 128:	37 07       	cpc	r19, r23
- 12a:	bc f3       	brlt	.-18     	; 0x11a <init_arr+0x6>
+ 154:	2f 5f       	subi	r18, 0xFF	; 255
+ 156:	3f 4f       	sbci	r19, 0xFF	; 255
+ 158:	26 17       	cp	r18, r22
+ 15a:	37 07       	cpc	r19, r23
+ 15c:	bc f3       	brlt	.-18     	; 0x14c <init_arr+0x6>
 		arr[i] = 0x00;
 	}
 }
- 12c:	08 95       	ret
+ 15e:	08 95       	ret
 
-0000012e <Calc_CheckSum>:
+00000160 <Calc_CheckSum>:
 
 uint8_t Calc_CheckSum(uint8_t* data){
- 12e:	dc 01       	movw	r26, r24
+ 160:	dc 01       	movw	r26, r24
 	uint8_t size = data[2];
- 130:	12 96       	adiw	r26, 0x02	; 2
- 132:	3c 91       	ld	r19, X
- 134:	12 97       	sbiw	r26, 0x02	; 2
+ 162:	12 96       	adiw	r26, 0x02	; 2
+ 164:	3c 91       	ld	r19, X
+ 166:	12 97       	sbiw	r26, 0x02	; 2
 	uint8_t ret = size;
- 136:	83 2f       	mov	r24, r19
+ 168:	83 2f       	mov	r24, r19
 	for(uint8_t i = 0; i < size;i++){
- 138:	90 e0       	ldi	r25, 0x00	; 0
- 13a:	06 c0       	rjmp	.+12     	; 0x148 <Calc_CheckSum+0x1a>
+ 16a:	90 e0       	ldi	r25, 0x00	; 0
+ 16c:	06 c0       	rjmp	.+12     	; 0x17a <Calc_CheckSum+0x1a>
 		ret ^= data[i+3];
- 13c:	fd 01       	movw	r30, r26
- 13e:	e9 0f       	add	r30, r25
- 140:	f1 1d       	adc	r31, r1
- 142:	23 81       	ldd	r18, Z+3	; 0x03
- 144:	82 27       	eor	r24, r18
+ 16e:	fd 01       	movw	r30, r26
+ 170:	e9 0f       	add	r30, r25
+ 172:	f1 1d       	adc	r31, r1
+ 174:	23 81       	ldd	r18, Z+3	; 0x03
+ 176:	82 27       	eor	r24, r18
 }
 
 uint8_t Calc_CheckSum(uint8_t* data){
 	uint8_t size = data[2];
 	uint8_t ret = size;
 	for(uint8_t i = 0; i < size;i++){
- 146:	9f 5f       	subi	r25, 0xFF	; 255
- 148:	93 17       	cp	r25, r19
- 14a:	c0 f3       	brcs	.-16     	; 0x13c <Calc_CheckSum+0xe>
+ 178:	9f 5f       	subi	r25, 0xFF	; 255
+ 17a:	93 17       	cp	r25, r19
+ 17c:	c0 f3       	brcs	.-16     	; 0x16e <Calc_CheckSum+0xe>
 		ret ^= data[i+3];
 	}
 	return ret;
 }
- 14c:	08 95       	ret
+ 17e:	08 95       	ret
 
-0000014e <make_byte>:
+00000180 <make_byte>:
 
 uint8_t make_byte(){
 	uint8_t recv_data;
 	uint8_t recv_byte = 0x00;
 	uint8_t send_byte;
 	for(int i = 0; i < 8; i++){
- 14e:	20 e0       	ldi	r18, 0x00	; 0
- 150:	30 e0       	ldi	r19, 0x00	; 0
+ 180:	20 e0       	ldi	r18, 0x00	; 0
+ 182:	30 e0       	ldi	r19, 0x00	; 0
 
 
 
 uint8_t make_byte(){
 	uint8_t recv_data;
 	uint8_t recv_byte = 0x00;
- 152:	90 e0       	ldi	r25, 0x00	; 0
+ 184:	90 e0       	ldi	r25, 0x00	; 0
 	uint8_t send_byte;
 	for(int i = 0; i < 8; i++){
- 154:	16 c0       	rjmp	.+44     	; 0x182 <make_byte+0x34>
+ 186:	16 c0       	rjmp	.+44     	; 0x1b4 <make_byte+0x34>
 		recv_data = PINB & 0x01;
- 156:	83 b1       	in	r24, 0x03	; 3
+ 188:	83 b1       	in	r24, 0x03	; 3
 		recv_byte += recv_data << i;
- 158:	48 2f       	mov	r20, r24
- 15a:	41 70       	andi	r20, 0x01	; 1
- 15c:	50 e0       	ldi	r21, 0x00	; 0
- 15e:	ba 01       	movw	r22, r20
- 160:	02 2e       	mov	r0, r18
- 162:	02 c0       	rjmp	.+4      	; 0x168 <make_byte+0x1a>
- 164:	66 0f       	add	r22, r22
- 166:	77 1f       	adc	r23, r23
- 168:	0a 94       	dec	r0
- 16a:	e2 f7       	brpl	.-8      	; 0x164 <make_byte+0x16>
- 16c:	96 0f       	add	r25, r22
+ 18a:	48 2f       	mov	r20, r24
+ 18c:	41 70       	andi	r20, 0x01	; 1
+ 18e:	50 e0       	ldi	r21, 0x00	; 0
+ 190:	ba 01       	movw	r22, r20
+ 192:	02 2e       	mov	r0, r18
+ 194:	02 c0       	rjmp	.+4      	; 0x19a <make_byte+0x1a>
+ 196:	66 0f       	add	r22, r22
+ 198:	77 1f       	adc	r23, r23
+ 19a:	0a 94       	dec	r0
+ 19c:	e2 f7       	brpl	.-8      	; 0x196 <make_byte+0x16>
+ 19e:	96 0f       	add	r25, r22
 	#else
 		//round up by default
 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
 	#endif
 
 	__builtin_avr_delay_cycles(__ticks_dc);
- 16e:	ef e9       	ldi	r30, 0x9F	; 159
- 170:	ff e0       	ldi	r31, 0x0F	; 15
- 172:	31 97       	sbiw	r30, 0x01	; 1
- 174:	f1 f7       	brne	.-4      	; 0x172 <make_byte+0x24>
- 176:	00 c0       	rjmp	.+0      	; 0x178 <make_byte+0x2a>
- 178:	00 00       	nop
+ 1a0:	ef e9       	ldi	r30, 0x9F	; 159
+ 1a2:	ff e0       	ldi	r31, 0x0F	; 15
+ 1a4:	31 97       	sbiw	r30, 0x01	; 1
+ 1a6:	f1 f7       	brne	.-4      	; 0x1a4 <make_byte+0x24>
+ 1a8:	00 c0       	rjmp	.+0      	; 0x1aa <make_byte+0x2a>
+ 1aa:	00 00       	nop
 		_delay_ms(WAIT_TIME_MS);
 		send_byte = ~recv_byte;
- 17a:	89 2f       	mov	r24, r25
- 17c:	80 95       	com	r24
+ 1ac:	89 2f       	mov	r24, r25
+ 1ae:	80 95       	com	r24
 
 uint8_t make_byte(){
 	uint8_t recv_data;
 	uint8_t recv_byte = 0x00;
 	uint8_t send_byte;
 	for(int i = 0; i < 8; i++){
- 17e:	2f 5f       	subi	r18, 0xFF	; 255
- 180:	3f 4f       	sbci	r19, 0xFF	; 255
- 182:	28 30       	cpi	r18, 0x08	; 8
- 184:	31 05       	cpc	r19, r1
- 186:	3c f3       	brlt	.-50     	; 0x156 <make_byte+0x8>
+ 1b0:	2f 5f       	subi	r18, 0xFF	; 255
+ 1b2:	3f 4f       	sbci	r19, 0xFF	; 255
+ 1b4:	28 30       	cpi	r18, 0x08	; 8
+ 1b6:	31 05       	cpc	r19, r1
+ 1b8:	3c f3       	brlt	.-50     	; 0x188 <make_byte+0x8>
 		recv_byte += recv_data << i;
 		_delay_ms(WAIT_TIME_MS);
 		send_byte = ~recv_byte;
 	}
 	return send_byte;
 }
- 188:	08 95       	ret
+ 1ba:	08 95       	ret
 
-0000018a <check_signal>:
+000001bc <check_signal>:
 
 
 int check_signal(uint8_t *data){
- 18a:	cf 93       	push	r28
+ 1bc:	cf 93       	push	r28
 	if(data[0] != 0xA5 || data[1] != 0x5A) return 0;
- 18c:	fc 01       	movw	r30, r24
- 18e:	20 81       	ld	r18, Z
- 190:	25 3a       	cpi	r18, 0xA5	; 165
- 192:	61 f4       	brne	.+24     	; 0x1ac <check_signal+0x22>
- 194:	21 81       	ldd	r18, Z+1	; 0x01
- 196:	2a 35       	cpi	r18, 0x5A	; 90
- 198:	61 f4       	brne	.+24     	; 0x1b2 <check_signal+0x28>
+ 1be:	fc 01       	movw	r30, r24
+ 1c0:	20 81       	ld	r18, Z
+ 1c2:	25 3a       	cpi	r18, 0xA5	; 165
+ 1c4:	61 f4       	brne	.+24     	; 0x1de <check_signal+0x22>
+ 1c6:	21 81       	ldd	r18, Z+1	; 0x01
+ 1c8:	2a 35       	cpi	r18, 0x5A	; 90
+ 1ca:	61 f4       	brne	.+24     	; 0x1e4 <check_signal+0x28>
 	return data[DATA_LENGTH - 1] == Calc_CheckSum(data);
- 19a:	c6 81       	ldd	r28, Z+6	; 0x06
- 19c:	0e 94 97 00 	call	0x12e	; 0x12e <Calc_CheckSum>
- 1a0:	91 e0       	ldi	r25, 0x01	; 1
- 1a2:	c8 13       	cpse	r28, r24
- 1a4:	90 e0       	ldi	r25, 0x00	; 0
- 1a6:	89 2f       	mov	r24, r25
- 1a8:	90 e0       	ldi	r25, 0x00	; 0
- 1aa:	05 c0       	rjmp	.+10     	; 0x1b6 <check_signal+0x2c>
+ 1cc:	c6 81       	ldd	r28, Z+6	; 0x06
+ 1ce:	0e 94 b0 00 	call	0x160	; 0x160 <Calc_CheckSum>
+ 1d2:	91 e0       	ldi	r25, 0x01	; 1
+ 1d4:	c8 13       	cpse	r28, r24
+ 1d6:	90 e0       	ldi	r25, 0x00	; 0
+ 1d8:	89 2f       	mov	r24, r25
+ 1da:	90 e0       	ldi	r25, 0x00	; 0
+ 1dc:	05 c0       	rjmp	.+10     	; 0x1e8 <check_signal+0x2c>
 	return send_byte;
 }
 
 
 int check_signal(uint8_t *data){
 	if(data[0] != 0xA5 || data[1] != 0x5A) return 0;
- 1ac:	80 e0       	ldi	r24, 0x00	; 0
- 1ae:	90 e0       	ldi	r25, 0x00	; 0
- 1b0:	02 c0       	rjmp	.+4      	; 0x1b6 <check_signal+0x2c>
- 1b2:	80 e0       	ldi	r24, 0x00	; 0
- 1b4:	90 e0       	ldi	r25, 0x00	; 0
+ 1de:	80 e0       	ldi	r24, 0x00	; 0
+ 1e0:	90 e0       	ldi	r25, 0x00	; 0
+ 1e2:	02 c0       	rjmp	.+4      	; 0x1e8 <check_signal+0x2c>
+ 1e4:	80 e0       	ldi	r24, 0x00	; 0
+ 1e6:	90 e0       	ldi	r25, 0x00	; 0
 	return data[DATA_LENGTH - 1] == Calc_CheckSum(data);
 }
- 1b6:	cf 91       	pop	r28
- 1b8:	08 95       	ret
+ 1e8:	cf 91       	pop	r28
+ 1ea:	08 95       	ret
 
-000001ba <make_transit_signal>:
+000001ec <make_transit_signal>:
 
-uint8_t make_transit_signal(uint8_t *data){
- 1ba:	0f 93       	push	r16
- 1bc:	1f 93       	push	r17
- 1be:	cf 93       	push	r28
- 1c0:	df 93       	push	r29
- 1c2:	cd b7       	in	r28, 0x3d	; 61
- 1c4:	de b7       	in	r29, 0x3e	; 62
- 1c6:	27 97       	sbiw	r28, 0x07	; 7
- 1c8:	0f b6       	in	r0, 0x3f	; 63
- 1ca:	f8 94       	cli
- 1cc:	de bf       	out	0x3e, r29	; 62
- 1ce:	0f be       	out	0x3f, r0	; 63
- 1d0:	cd bf       	out	0x3d, r28	; 61
- 1d2:	8c 01       	movw	r16, r24
-	uint8_t ret[DATA_LENGTH]; //data[2]にしたい
-	init_arr(ret, DATA_LENGTH);
- 1d4:	67 e0       	ldi	r22, 0x07	; 7
- 1d6:	70 e0       	ldi	r23, 0x00	; 0
- 1d8:	ce 01       	movw	r24, r28
- 1da:	01 96       	adiw	r24, 0x01	; 1
- 1dc:	0e 94 8a 00 	call	0x114	; 0x114 <init_arr>
-	ret[0] = 0xa5;
-	for(int i = 0; i < DATA_LENGTH - 5; i++){
- 1e0:	80 e0       	ldi	r24, 0x00	; 0
- 1e2:	90 e0       	ldi	r25, 0x00	; 0
- 1e4:	01 c0       	rjmp	.+2      	; 0x1e8 <make_transit_signal+0x2e>
- 1e6:	01 96       	adiw	r24, 0x01	; 1
- 1e8:	82 30       	cpi	r24, 0x02	; 2
- 1ea:	91 05       	cpc	r25, r1
- 1ec:	e4 f3       	brlt	.-8      	; 0x1e6 <make_transit_signal+0x2c>
-		//ret[i] = 0xa5;
+uint8_t* make_transit_signal(uint8_t *data, uint8_t ret[4]){
+ 1ec:	ac 01       	movw	r20, r24
+	/*
+	fixme: null data
+	*///data[2]にしたい
+	//init_arr(ret, DATA_LENGTH);
+	ret[0] = 0xA5;
+ 1ee:	85 ea       	ldi	r24, 0xA5	; 165
+ 1f0:	fb 01       	movw	r30, r22
+ 1f2:	80 83       	st	Z, r24
+	for(int i = 0; i < 3; i++){
+ 1f4:	20 e0       	ldi	r18, 0x00	; 0
+ 1f6:	30 e0       	ldi	r19, 0x00	; 0
+ 1f8:	0b c0       	rjmp	.+22     	; 0x210 <make_transit_signal+0x24>
+		ret[i] = data[i + 3];
+ 1fa:	fb 01       	movw	r30, r22
+ 1fc:	e2 0f       	add	r30, r18
+ 1fe:	f3 1f       	adc	r31, r19
+ 200:	da 01       	movw	r26, r20
+ 202:	a2 0f       	add	r26, r18
+ 204:	b3 1f       	adc	r27, r19
+ 206:	13 96       	adiw	r26, 0x03	; 3
+ 208:	9c 91       	ld	r25, X
+ 20a:	90 83       	st	Z, r25
+	/*
+	fixme: null data
+	*///data[2]にしたい
+	//init_arr(ret, DATA_LENGTH);
+	ret[0] = 0xA5;
+	for(int i = 0; i < 3; i++){
+ 20c:	2f 5f       	subi	r18, 0xFF	; 255
+ 20e:	3f 4f       	sbci	r19, 0xFF	; 255
+ 210:	23 30       	cpi	r18, 0x03	; 3
+ 212:	31 05       	cpc	r19, r1
+ 214:	94 f3       	brlt	.-28     	; 0x1fa <make_transit_signal+0xe>
+		ret[i] = data[i + 3];
 	}
-	data[DATA_LENGTH - 2] = '\0';
- 1ee:	f8 01       	movw	r30, r16
- 1f0:	15 82       	std	Z+5, r1	; 0x05
+	ret[3] = 0xFF;
+ 216:	8f ef       	ldi	r24, 0xFF	; 255
+ 218:	fb 01       	movw	r30, r22
+ 21a:	83 83       	std	Z+3, r24	; 0x03
 	return ret;
 }
- 1f2:	80 e0       	ldi	r24, 0x00	; 0
- 1f4:	27 96       	adiw	r28, 0x07	; 7
- 1f6:	0f b6       	in	r0, 0x3f	; 63
- 1f8:	f8 94       	cli
- 1fa:	de bf       	out	0x3e, r29	; 62
- 1fc:	0f be       	out	0x3f, r0	; 63
- 1fe:	cd bf       	out	0x3d, r28	; 61
- 200:	df 91       	pop	r29
- 202:	cf 91       	pop	r28
- 204:	1f 91       	pop	r17
- 206:	0f 91       	pop	r16
- 208:	08 95       	ret
+ 21c:	cb 01       	movw	r24, r22
+ 21e:	08 95       	ret
 
-0000020a <main>:
+00000220 <main>:
 
 
 int main(void)
 {	
- 20a:	cf 93       	push	r28
- 20c:	df 93       	push	r29
- 20e:	cd b7       	in	r28, 0x3d	; 61
- 210:	de b7       	in	r29, 0x3e	; 62
- 212:	28 97       	sbiw	r28, 0x08	; 8
- 214:	0f b6       	in	r0, 0x3f	; 63
- 216:	f8 94       	cli
- 218:	de bf       	out	0x3e, r29	; 62
- 21a:	0f be       	out	0x3f, r0	; 63
- 21c:	cd bf       	out	0x3d, r28	; 61
+ 220:	cf 93       	push	r28
+ 222:	df 93       	push	r29
+ 224:	cd b7       	in	r28, 0x3d	; 61
+ 226:	de b7       	in	r29, 0x3e	; 62
+ 228:	2c 97       	sbiw	r28, 0x0c	; 12
+ 22a:	0f b6       	in	r0, 0x3f	; 63
+ 22c:	f8 94       	cli
+ 22e:	de bf       	out	0x3e, r29	; 62
+ 230:	0f be       	out	0x3f, r0	; 63
+ 232:	cd bf       	out	0x3d, r28	; 61
     uint8_t recv_data;
 	uint8_t send_byte;
 	
     GoTo16MHz();
- 21e:	0e 94 6d 00 	call	0xda	; 0xda <GoTo16MHz>
+ 234:	0e 94 6d 00 	call	0xda	; 0xda <GoTo16MHz>
     USART1_Init();
- 222:	0e 94 65 01 	call	0x2ca	; 0x2ca <USART1_Init>
+ 238:	0e 94 79 01 	call	0x2f2	; 0x2f2 <USART1_Init>
 
     DDRB &= ~0x01;
- 226:	84 b1       	in	r24, 0x04	; 4
- 228:	8e 7f       	andi	r24, 0xFE	; 254
- 22a:	84 b9       	out	0x04, r24	; 4
+ 23c:	84 b1       	in	r24, 0x04	; 4
+ 23e:	8e 7f       	andi	r24, 0xFE	; 254
+ 240:	84 b9       	out	0x04, r24	; 4
 	DDRB |= 0x02;
- 22c:	84 b1       	in	r24, 0x04	; 4
- 22e:	82 60       	ori	r24, 0x02	; 2
- 230:	84 b9       	out	0x04, r24	; 4
+ 242:	84 b1       	in	r24, 0x04	; 4
+ 244:	82 60       	ori	r24, 0x02	; 2
+ 246:	84 b9       	out	0x04, r24	; 4
 	
 	PORTB &= ~0x02;
- 232:	85 b1       	in	r24, 0x05	; 5
- 234:	8d 7f       	andi	r24, 0xFD	; 253
- 236:	85 b9       	out	0x05, r24	; 5
+ 248:	85 b1       	in	r24, 0x05	; 5
+ 24a:	8d 7f       	andi	r24, 0xFD	; 253
+ 24c:	85 b9       	out	0x05, r24	; 5
 	
     while (1) {
         recv_data = PINB & 0x01;
- 238:	83 b1       	in	r24, 0x03	; 3
+ 24e:	83 b1       	in	r24, 0x03	; 3
 		while((PINB & 0x01) == 0x01){
- 23a:	02 c0       	rjmp	.+4      	; 0x240 <main+0x36>
+ 250:	02 c0       	rjmp	.+4      	; 0x256 <main+0x36>
 			PORTB = 0x02;
- 23c:	82 e0       	ldi	r24, 0x02	; 2
- 23e:	85 b9       	out	0x05, r24	; 5
+ 252:	82 e0       	ldi	r24, 0x02	; 2
+ 254:	85 b9       	out	0x05, r24	; 5
 	
 	PORTB &= ~0x02;
 	
     while (1) {
         recv_data = PINB & 0x01;
 		while((PINB & 0x01) == 0x01){
- 240:	18 99       	sbic	0x03, 0	; 3
- 242:	fc cf       	rjmp	.-8      	; 0x23c <main+0x32>
- 244:	8f e9       	ldi	r24, 0x9F	; 159
- 246:	9f e0       	ldi	r25, 0x0F	; 15
- 248:	01 97       	sbiw	r24, 0x01	; 1
- 24a:	f1 f7       	brne	.-4      	; 0x248 <main+0x3e>
- 24c:	00 c0       	rjmp	.+0      	; 0x24e <main+0x44>
- 24e:	00 00       	nop
+ 256:	18 99       	sbic	0x03, 0	; 3
+ 258:	fc cf       	rjmp	.-8      	; 0x252 <main+0x32>
+ 25a:	8f e9       	ldi	r24, 0x9F	; 159
+ 25c:	9f e0       	ldi	r25, 0x0F	; 15
+ 25e:	01 97       	sbiw	r24, 0x01	; 1
+ 260:	f1 f7       	brne	.-4      	; 0x25e <main+0x3e>
+ 262:	00 c0       	rjmp	.+0      	; 0x264 <main+0x44>
+ 264:	00 00       	nop
 			PORTB = 0x02;
 		}
 		_delay_ms(WAIT_TIME_MS);
 		PORTB = 0x00;
- 250:	15 b8       	out	0x05, r1	; 5
+ 266:	15 b8       	out	0x05, r1	; 5
 		uint8_t data[DATA_LENGTH + 1];
 		init_arr(data, DATA_LENGTH + 1);
- 252:	68 e0       	ldi	r22, 0x08	; 8
- 254:	70 e0       	ldi	r23, 0x00	; 0
- 256:	ce 01       	movw	r24, r28
- 258:	01 96       	adiw	r24, 0x01	; 1
- 25a:	0e 94 8a 00 	call	0x114	; 0x114 <init_arr>
+ 268:	68 e0       	ldi	r22, 0x08	; 8
+ 26a:	70 e0       	ldi	r23, 0x00	; 0
+ 26c:	ce 01       	movw	r24, r28
+ 26e:	01 96       	adiw	r24, 0x01	; 1
+ 270:	0e 94 a3 00 	call	0x146	; 0x146 <init_arr>
 		for(int i = 0; i < DATA_LENGTH; i++){
- 25e:	00 e0       	ldi	r16, 0x00	; 0
- 260:	10 e0       	ldi	r17, 0x00	; 0
- 262:	11 c0       	rjmp	.+34     	; 0x286 <main+0x7c>
+ 274:	00 e0       	ldi	r16, 0x00	; 0
+ 276:	10 e0       	ldi	r17, 0x00	; 0
+ 278:	11 c0       	rjmp	.+34     	; 0x29c <main+0x7c>
 			data[i] =  make_byte();
- 264:	0e 94 a7 00 	call	0x14e	; 0x14e <make_byte>
- 268:	e1 e0       	ldi	r30, 0x01	; 1
- 26a:	f0 e0       	ldi	r31, 0x00	; 0
- 26c:	ec 0f       	add	r30, r28
- 26e:	fd 1f       	adc	r31, r29
- 270:	e0 0f       	add	r30, r16
- 272:	f1 1f       	adc	r31, r17
- 274:	80 83       	st	Z, r24
- 276:	8f e9       	ldi	r24, 0x9F	; 159
- 278:	9f e0       	ldi	r25, 0x0F	; 15
- 27a:	01 97       	sbiw	r24, 0x01	; 1
- 27c:	f1 f7       	brne	.-4      	; 0x27a <main+0x70>
- 27e:	00 c0       	rjmp	.+0      	; 0x280 <main+0x76>
- 280:	00 00       	nop
+ 27a:	0e 94 c0 00 	call	0x180	; 0x180 <make_byte>
+ 27e:	e1 e0       	ldi	r30, 0x01	; 1
+ 280:	f0 e0       	ldi	r31, 0x00	; 0
+ 282:	ec 0f       	add	r30, r28
+ 284:	fd 1f       	adc	r31, r29
+ 286:	e0 0f       	add	r30, r16
+ 288:	f1 1f       	adc	r31, r17
+ 28a:	80 83       	st	Z, r24
+ 28c:	8f e9       	ldi	r24, 0x9F	; 159
+ 28e:	9f e0       	ldi	r25, 0x0F	; 15
+ 290:	01 97       	sbiw	r24, 0x01	; 1
+ 292:	f1 f7       	brne	.-4      	; 0x290 <main+0x70>
+ 294:	00 c0       	rjmp	.+0      	; 0x296 <main+0x76>
+ 296:	00 00       	nop
 		}
 		_delay_ms(WAIT_TIME_MS);
 		PORTB = 0x00;
 		uint8_t data[DATA_LENGTH + 1];
 		init_arr(data, DATA_LENGTH + 1);
 		for(int i = 0; i < DATA_LENGTH; i++){
- 282:	0f 5f       	subi	r16, 0xFF	; 255
- 284:	1f 4f       	sbci	r17, 0xFF	; 255
- 286:	07 30       	cpi	r16, 0x07	; 7
- 288:	11 05       	cpc	r17, r1
- 28a:	64 f3       	brlt	.-40     	; 0x264 <main+0x5a>
+ 298:	0f 5f       	subi	r16, 0xFF	; 255
+ 29a:	1f 4f       	sbci	r17, 0xFF	; 255
+ 29c:	07 30       	cpi	r16, 0x07	; 7
+ 29e:	11 05       	cpc	r17, r1
+ 2a0:	64 f3       	brlt	.-40     	; 0x27a <main+0x5a>
 			data[i] =  make_byte();
 			_delay_ms(WAIT_TIME_MS);
 		}
+		uint8_t send_data[4] = {0x00, 0x00, 0x00, 0xFF};
+ 2a2:	19 86       	std	Y+9, r1	; 0x09
+ 2a4:	1a 86       	std	Y+10, r1	; 0x0a
+ 2a6:	1b 86       	std	Y+11, r1	; 0x0b
+ 2a8:	8f ef       	ldi	r24, 0xFF	; 255
+ 2aa:	8c 87       	std	Y+12, r24	; 0x0c
 		data[DATA_LENGTH] = '\0';
- 28c:	18 86       	std	Y+8, r1	; 0x08
+ 2ac:	18 86       	std	Y+8, r1	; 0x08
 		if(!check_signal(data)){
- 28e:	ce 01       	movw	r24, r28
- 290:	01 96       	adiw	r24, 0x01	; 1
- 292:	0e 94 c5 00 	call	0x18a	; 0x18a <check_signal>
- 296:	89 2b       	or	r24, r25
- 298:	21 f4       	brne	.+8      	; 0x2a2 <main+0x98>
+ 2ae:	ce 01       	movw	r24, r28
+ 2b0:	01 96       	adiw	r24, 0x01	; 1
+ 2b2:	0e 94 de 00 	call	0x1bc	; 0x1bc <check_signal>
+ 2b6:	89 2b       	or	r24, r25
+ 2b8:	29 f4       	brne	.+10     	; 0x2c4 <main+0xa4>
 			uart1_send_strings("Data was broken");
- 29a:	80 e0       	ldi	r24, 0x00	; 0
- 29c:	91 e0       	ldi	r25, 0x01	; 1
- 29e:	0e 94 73 00 	call	0xe6	; 0xe6 <uart1_send_strings>
-			//continue;
+ 2ba:	80 e0       	ldi	r24, 0x00	; 0
+ 2bc:	91 e0       	ldi	r25, 0x01	; 1
+ 2be:	0e 94 73 00 	call	0xe6	; 0xe6 <uart1_send_strings>
+ 2c2:	c5 cf       	rjmp	.-118    	; 0x24e <main+0x2e>
+			continue;
 		}
-		uart1_send_strings(data);
- 2a2:	ce 01       	movw	r24, r28
- 2a4:	01 96       	adiw	r24, 0x01	; 1
- 2a6:	0e 94 73 00 	call	0xe6	; 0xe6 <uart1_send_strings>
+		uart1_send_uint8t(make_transit_signal(data, send_data));
+ 2c4:	be 01       	movw	r22, r28
+ 2c6:	67 5f       	subi	r22, 0xF7	; 247
+ 2c8:	7f 4f       	sbci	r23, 0xFF	; 255
+ 2ca:	ce 01       	movw	r24, r28
+ 2cc:	01 96       	adiw	r24, 0x01	; 1
+ 2ce:	0e 94 f6 00 	call	0x1ec	; 0x1ec <make_transit_signal>
+ 2d2:	0e 94 8b 00 	call	0x116	; 0x116 <uart1_send_uint8t>
 		uart1_send_strings("\r\n");
- 2aa:	80 e1       	ldi	r24, 0x10	; 16
- 2ac:	91 e0       	ldi	r25, 0x01	; 1
- 2ae:	0e 94 73 00 	call	0xe6	; 0xe6 <uart1_send_strings>
-		uart1_send_strings(make_transit_signal(data));
- 2b2:	ce 01       	movw	r24, r28
- 2b4:	01 96       	adiw	r24, 0x01	; 1
- 2b6:	0e 94 dd 00 	call	0x1ba	; 0x1ba <make_transit_signal>
- 2ba:	90 e0       	ldi	r25, 0x00	; 0
- 2bc:	0e 94 73 00 	call	0xe6	; 0xe6 <uart1_send_strings>
-		//uart1_send_strings(data);
-		uart1_send_strings("\r\n");
- 2c0:	80 e1       	ldi	r24, 0x10	; 16
- 2c2:	91 e0       	ldi	r25, 0x01	; 1
- 2c4:	0e 94 73 00 	call	0xe6	; 0xe6 <uart1_send_strings>
-		//UART1_Byte_Send((char)send_byte);
-		//_delay_ms(500);
-    }
- 2c8:	b7 cf       	rjmp	.-146    	; 0x238 <main+0x2e>
+ 2d6:	80 e1       	ldi	r24, 0x10	; 16
+ 2d8:	91 e0       	ldi	r25, 0x01	; 1
+ 2da:	0e 94 73 00 	call	0xe6	; 0xe6 <uart1_send_strings>
+ 2de:	9f ef       	ldi	r25, 0xFF	; 255
+ 2e0:	29 e6       	ldi	r18, 0x69	; 105
+ 2e2:	88 e1       	ldi	r24, 0x18	; 24
+ 2e4:	91 50       	subi	r25, 0x01	; 1
+ 2e6:	20 40       	sbci	r18, 0x00	; 0
+ 2e8:	80 40       	sbci	r24, 0x00	; 0
+ 2ea:	e1 f7       	brne	.-8      	; 0x2e4 <main+0xc4>
+ 2ec:	00 c0       	rjmp	.+0      	; 0x2ee <main+0xce>
+ 2ee:	00 00       	nop
+ 2f0:	ae cf       	rjmp	.-164    	; 0x24e <main+0x2e>
 
-000002ca <USART1_Init>:
+000002f2 <USART1_Init>:
 #include <avr/io.h>
 
  // シリアル通信の設定 (115.2kbps)
  void USART1_Init( void )
  {
 	 UBRR1  = 8; // 動作周波数(Hz) / (ボーレート * 16) - 1
- 2ca:	88 e0       	ldi	r24, 0x08	; 8
- 2cc:	90 e0       	ldi	r25, 0x00	; 0
- 2ce:	90 93 cd 00 	sts	0x00CD, r25	; 0x8000cd <__TEXT_REGION_LENGTH__+0x7f80cd>
- 2d2:	80 93 cc 00 	sts	0x00CC, r24	; 0x8000cc <__TEXT_REGION_LENGTH__+0x7f80cc>
+ 2f2:	88 e0       	ldi	r24, 0x08	; 8
+ 2f4:	90 e0       	ldi	r25, 0x00	; 0
+ 2f6:	90 93 cd 00 	sts	0x00CD, r25	; 0x8000cd <__TEXT_REGION_LENGTH__+0x7f80cd>
+ 2fa:	80 93 cc 00 	sts	0x00CC, r24	; 0x8000cc <__TEXT_REGION_LENGTH__+0x7f80cc>
 	 UCSR1A = 0b00000000;
- 2d6:	10 92 c8 00 	sts	0x00C8, r1	; 0x8000c8 <__TEXT_REGION_LENGTH__+0x7f80c8>
+ 2fe:	10 92 c8 00 	sts	0x00C8, r1	; 0x8000c8 <__TEXT_REGION_LENGTH__+0x7f80c8>
 	 UCSR1B = 0b00011000; // 送受信可
- 2da:	88 e1       	ldi	r24, 0x18	; 24
- 2dc:	80 93 c9 00 	sts	0x00C9, r24	; 0x8000c9 <__TEXT_REGION_LENGTH__+0x7f80c9>
+ 302:	88 e1       	ldi	r24, 0x18	; 24
+ 304:	80 93 c9 00 	sts	0x00C9, r24	; 0x8000c9 <__TEXT_REGION_LENGTH__+0x7f80c9>
 	 UCSR1C = 0b00000110; // データ8bit, 非同期, パリティなし, Stop 1bit
- 2e0:	86 e0       	ldi	r24, 0x06	; 6
- 2e2:	80 93 ca 00 	sts	0x00CA, r24	; 0x8000ca <__TEXT_REGION_LENGTH__+0x7f80ca>
+ 308:	86 e0       	ldi	r24, 0x06	; 6
+ 30a:	80 93 ca 00 	sts	0x00CA, r24	; 0x8000ca <__TEXT_REGION_LENGTH__+0x7f80ca>
 	 //UCSR1D = 0b00000010; // flow control : CTS有効
 	 UCSR1D = 0b00000000; // flow control : CTS無効
- 2e6:	10 92 cb 00 	sts	0x00CB, r1	; 0x8000cb <__TEXT_REGION_LENGTH__+0x7f80cb>
- 2ea:	08 95       	ret
+ 30e:	10 92 cb 00 	sts	0x00CB, r1	; 0x8000cb <__TEXT_REGION_LENGTH__+0x7f80cb>
+ 312:	08 95       	ret
 
-000002ec <UART1_Byte_Send>:
+00000314 <UART1_Byte_Send>:
  }
 
  // UART1へのバイトデータの送信
  void UART1_Byte_Send ( uint8_t data )
  {
 	 while( ( UCSR1A & ( 1 << UDRE1 ) ) == 0 ); // 送信可フラグが立つまで待つ．
- 2ec:	90 91 c8 00 	lds	r25, 0x00C8	; 0x8000c8 <__TEXT_REGION_LENGTH__+0x7f80c8>
- 2f0:	95 ff       	sbrs	r25, 5
- 2f2:	fc cf       	rjmp	.-8      	; 0x2ec <UART1_Byte_Send>
+ 314:	90 91 c8 00 	lds	r25, 0x00C8	; 0x8000c8 <__TEXT_REGION_LENGTH__+0x7f80c8>
+ 318:	95 ff       	sbrs	r25, 5
+ 31a:	fc cf       	rjmp	.-8      	; 0x314 <UART1_Byte_Send>
 	 UDR1 = data;
- 2f4:	80 93 ce 00 	sts	0x00CE, r24	; 0x8000ce <__TEXT_REGION_LENGTH__+0x7f80ce>
- 2f8:	08 95       	ret
+ 31c:	80 93 ce 00 	sts	0x00CE, r24	; 0x8000ce <__TEXT_REGION_LENGTH__+0x7f80ce>
+ 320:	08 95       	ret
 
-000002fa <_exit>:
- 2fa:	f8 94       	cli
+00000322 <_exit>:
+ 322:	f8 94       	cli
 
-000002fc <__stop_program>:
- 2fc:	ff cf       	rjmp	.-2      	; 0x2fc <__stop_program>
+00000324 <__stop_program>:
+ 324:	ff cf       	rjmp	.-2      	; 0x324 <__stop_program>
