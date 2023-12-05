@@ -54,6 +54,7 @@ def main():
             if check_data(data):
                 cam_capture(cam)
                 subprocess.run("processing.exe")
+                return 0
     except KeyboardInterrupt:
         return 0
 
