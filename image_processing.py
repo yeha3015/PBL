@@ -3,6 +3,7 @@ import serial
 import time
 import numpy as np
 import subprocess
+import socket
 
 # ret, flame = cam.read()
 
@@ -21,6 +22,12 @@ def UART_init(name, baud_rate, to):
     シリアルのID(?)を返す。
     """
     return serial.Serial(name, baud_rate, timeout=to)
+
+
+def Processing_init(host, port):
+    socket_client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    socket_client.connect((host, port))
+    return socket_client
 
 
 def UART_read(ser):
@@ -43,18 +50,27 @@ def check_data(data):
     return data == [84, 63, 146]
 
 
+def sct_send(socket_client, n):
+    socket_client.send(n.to_bytes(1, "little"))
+
+
 def main():
+    #processing - init
+    host = "127.0.0.1"
+    port = 10001
+
     # initialize
     ser = UART_init("COM3", 115200, 5)
     cam = cam_init(0)
-
+    socket_client = Processing_init(host, port)
+    print("start")
     try:
         while True:
-            data = list(np.frombuffer(UART_read(ser), np.uint8, 3))
-            if check_data(data):
-                cam_capture(cam)
-                subprocess.run("processing.exe")
-                return 0
+            data_bytes = UART_read(ser).hex()
+            data = [data_bytes[i:i+2] for i in range(0, 6, 2)]
+            if True:
+                for i in data:
+                    sct_send(socket_client, int(i, 16))
     except KeyboardInterrupt:
         return 0
 
