@@ -125,7 +125,7 @@ int main(void)
 		data[DATA_LENGTH] = '\0';
 		if(!check_signal(data)){
 			uart1_send_strings("Data was broken");
-			uart1_send_strings("\r\n");
+			uart1_send_strings("\r\n");	
 			continue;
 		}
 		uart1_send_uint8t(make_transit_signal(data, send_data));
