@@ -54,30 +54,76 @@ def sct_send(socket_client, n):
     socket_client.send(n.to_bytes(1, "little"))
 
 
+def socket_send(socket_client, n):
+    socket_client.send(n)
+
+
+def height_width_send(x, socket_client):
+    for i in range(4):
+        socket_client.send((x >> (8 * i) & 0xff).to_bytes(1, "little"))
+    return 0
+
+
+def image_send(socket_client, img):
+    send_img = cv2.imread(img)
+    # cv2.imshow("send_img", send_img)
+    ih, iw, _ = send_img.shape
+    print(ih, iw)
+    height_width_send(ih, socket_client)
+    height_width_send(iw, socket_client)
+    socket_client.recv(1024)
+    send_rgb = []
+    for iy in range(ih):
+        for ix in range(iw):
+            pixel = list(map(int, send_img[iy, ix, :]))
+            for i in pixel[::-1]:
+                send_rgb.append(i.to_bytes(1, "little"))
+    for i in send_rgb:
+        socket_send(socket_client, i)
+    res = socket_client.recv(1024)
+    # print(res.hex())
+    if res.hex() == "02":
+        return 1
+    return 0
+
+
 def main():
     #processing - init
     host = "127.0.0.1"
-    port = 10001
+    port = 5554
 
     # initialize
-    ser = UART_init("COM3", 115200, 5)
-    cam = cam_init(0)
+    # ser = UART_init("COM3", 115200, 5)
+    # cam = cam_init(0)
     socket_client = Processing_init(host, port)
     print("start")
+    """
     try:
         while True:
             data_bytes = UART_read(ser).hex()
+            data_bytes = [0x21, 0x22, 0x23]
             data = [data_bytes[i:i+2] for i in range(0, 6, 2)]
-            if True:
-                for i in data:
-                    sct_send(socket_client, int(i, 16))
+            if True:  # fixme: add cond
+                for i in data_bytes:
+                    sct_send(socket_client, i)
     except KeyboardInterrupt:
         return 0
+    """
+    send_comp = 0
+    while True:
+        send_comp = image_send(socket_client, "img0.jpg")
+        if send_comp == 1:
+            break
+        time.sleep(10)
+    return 0
+
 
 # check_ID()
 # UART_read_write()
 # cam_read(cam)
+# image_send(Processing_init("127.0.0.1", 5554), "img0.jpg")
 main()
+
 
 # シリアルポート確認用
 def check_ID():

@@ -86,7 +86,7 @@ void clientEvent(Client RecvClient){
     //--------------------------------------------------------------------------------------------------
       NumBytes = RecvClient.available( ); //受信データのバイト数を確認
     
-      if( NumBytes >= ImgHeight * ImgWidth * 3 ){ //全画像データ(RGB×高さ×幅)を受信したら
+       if( NumBytes >= ImgHeight * ImgWidth * 3 ){ //全画像データ(RGB×高さ×幅)を受信したら
         
         Message[2] += " => 受信完了: " + NumBytes + "[バイト]";
         

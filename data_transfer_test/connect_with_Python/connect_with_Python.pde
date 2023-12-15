@@ -3,7 +3,7 @@ import processing.net.*;
 int port = 10001; // 適当なポート番号を設定
 
 Server server;
-byte[] byteBuffer = new byte[8];
+byte[] byteBuffer = new byte[3];
 
 void setup() {
   server = new Server(this, port);
@@ -16,7 +16,7 @@ void draw() {
     int byteCount = client.readBytes(byteBuffer);
     String printString = new String(byteBuffer);
     if (byteCount > 0) {
-      println(printString); // Pythonからのメッセージを出力
+      println(byteBuffer); // Pythonからのメッセージを出力
     } 
   } 
 }

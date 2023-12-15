@@ -3,29 +3,29 @@ PBL_IR_transfer.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000014  00800100  00000326  0000039a  2**0
+  0 .data         00000014  00800100  0000032e  000003a2  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         00000326  00000000  00000000  00000074  2**1
+  1 .text         0000032e  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .comment      00000030  00000000  00000000  000003ae  2**0
+  2 .comment      00000030  00000000  00000000  000003b6  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000003e0  2**2
+  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000003e8  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 000000a0  00000000  00000000  00000420  2**0
+  4 .debug_aranges 000000a0  00000000  00000000  00000428  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   0000113b  00000000  00000000  000004c0  2**0
+  5 .debug_info   00001157  00000000  00000000  000004c8  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 00000cc5  00000000  00000000  000015fb  2**0
+  6 .debug_abbrev 00000cc5  00000000  00000000  0000161f  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   00000723  00000000  00000000  000022c0  2**0
+  7 .debug_line   0000072a  00000000  00000000  000022e4  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000174  00000000  00000000  000029e4  2**2
+  8 .debug_frame  00000174  00000000  00000000  00002a10  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    00000671  00000000  00000000  00002b58  2**0
+  9 .debug_str    00000671  00000000  00000000  00002b84  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    000005af  00000000  00000000  000031c9  2**0
+ 10 .debug_loc    000005af  00000000  00000000  000031f5  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000098  00000000  00000000  00003778  2**0
+ 11 .debug_ranges 00000098  00000000  00000000  000037a4  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -87,7 +87,7 @@ Disassembly of section .text:
   b8:	11 e0       	ldi	r17, 0x01	; 1
   ba:	a0 e0       	ldi	r26, 0x00	; 0
   bc:	b1 e0       	ldi	r27, 0x01	; 1
-  be:	e6 e2       	ldi	r30, 0x26	; 38
+  be:	ee e2       	ldi	r30, 0x2E	; 46
   c0:	f3 e0       	ldi	r31, 0x03	; 3
   c2:	02 c0       	rjmp	.+4      	; 0xc8 <__do_copy_data+0x10>
   c4:	05 90       	lpm	r0, Z+
@@ -96,7 +96,7 @@ Disassembly of section .text:
   ca:	b1 07       	cpc	r27, r17
   cc:	d9 f7       	brne	.-10     	; 0xc4 <__do_copy_data+0xc>
   ce:	0e 94 10 01 	call	0x220	; 0x220 <main>
-  d2:	0c 94 91 01 	jmp	0x322	; 0x322 <_exit>
+  d2:	0c 94 95 01 	jmp	0x32a	; 0x32a <_exit>
 
 000000d6 <__bad_interrupt>:
   d6:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -132,7 +132,7 @@ int uart1_send_strings(char *string){
   f4:	03 c0       	rjmp	.+6      	; 0xfc <uart1_send_strings+0x16>
 		UART1_Byte_Send(string[i++]);
   f6:	21 96       	adiw	r28, 0x01	; 1
-  f8:	0e 94 8a 01 	call	0x314	; 0x314 <UART1_Byte_Send>
+  f8:	0e 94 8e 01 	call	0x31c	; 0x31c <UART1_Byte_Send>
     CLKPR = 0;
 }
 
@@ -172,7 +172,7 @@ int uart1_send_uint8t(uint8_t *data){
  124:	03 c0       	rjmp	.+6      	; 0x12c <uart1_send_uint8t+0x16>
 		UART1_Byte_Send(data[i++]);
  126:	21 96       	adiw	r28, 0x01	; 1
- 128:	0e 94 8a 01 	call	0x314	; 0x314 <UART1_Byte_Send>
+ 128:	0e 94 8e 01 	call	0x31c	; 0x31c <UART1_Byte_Send>
 	return 0;
 }
 
@@ -434,7 +434,7 @@ int main(void)
     GoTo16MHz();
  234:	0e 94 6d 00 	call	0xda	; 0xda <GoTo16MHz>
     USART1_Init();
- 238:	0e 94 79 01 	call	0x2f2	; 0x2f2 <USART1_Init>
+ 238:	0e 94 7d 01 	call	0x2fa	; 0x2fa <USART1_Init>
 
     DDRB &= ~0x01;
  23c:	84 b1       	in	r24, 0x04	; 4
@@ -530,77 +530,81 @@ int main(void)
  2b0:	01 96       	adiw	r24, 0x01	; 1
  2b2:	0e 94 de 00 	call	0x1bc	; 0x1bc <check_signal>
  2b6:	89 2b       	or	r24, r25
- 2b8:	29 f4       	brne	.+10     	; 0x2c4 <main+0xa4>
+ 2b8:	49 f4       	brne	.+18     	; 0x2cc <main+0xac>
 			uart1_send_strings("Data was broken");
  2ba:	80 e0       	ldi	r24, 0x00	; 0
  2bc:	91 e0       	ldi	r25, 0x01	; 1
  2be:	0e 94 73 00 	call	0xe6	; 0xe6 <uart1_send_strings>
- 2c2:	c5 cf       	rjmp	.-118    	; 0x24e <main+0x2e>
+			uart1_send_strings("\r\n");	
+ 2c2:	80 e1       	ldi	r24, 0x10	; 16
+ 2c4:	91 e0       	ldi	r25, 0x01	; 1
+ 2c6:	0e 94 73 00 	call	0xe6	; 0xe6 <uart1_send_strings>
+ 2ca:	c1 cf       	rjmp	.-126    	; 0x24e <main+0x2e>
 			continue;
 		}
 		uart1_send_uint8t(make_transit_signal(data, send_data));
- 2c4:	be 01       	movw	r22, r28
- 2c6:	67 5f       	subi	r22, 0xF7	; 247
- 2c8:	7f 4f       	sbci	r23, 0xFF	; 255
- 2ca:	ce 01       	movw	r24, r28
- 2cc:	01 96       	adiw	r24, 0x01	; 1
- 2ce:	0e 94 f6 00 	call	0x1ec	; 0x1ec <make_transit_signal>
- 2d2:	0e 94 8b 00 	call	0x116	; 0x116 <uart1_send_uint8t>
+ 2cc:	be 01       	movw	r22, r28
+ 2ce:	67 5f       	subi	r22, 0xF7	; 247
+ 2d0:	7f 4f       	sbci	r23, 0xFF	; 255
+ 2d2:	ce 01       	movw	r24, r28
+ 2d4:	01 96       	adiw	r24, 0x01	; 1
+ 2d6:	0e 94 f6 00 	call	0x1ec	; 0x1ec <make_transit_signal>
+ 2da:	0e 94 8b 00 	call	0x116	; 0x116 <uart1_send_uint8t>
 		uart1_send_strings("\r\n");
- 2d6:	80 e1       	ldi	r24, 0x10	; 16
- 2d8:	91 e0       	ldi	r25, 0x01	; 1
- 2da:	0e 94 73 00 	call	0xe6	; 0xe6 <uart1_send_strings>
- 2de:	9f ef       	ldi	r25, 0xFF	; 255
- 2e0:	29 e6       	ldi	r18, 0x69	; 105
- 2e2:	88 e1       	ldi	r24, 0x18	; 24
- 2e4:	91 50       	subi	r25, 0x01	; 1
- 2e6:	20 40       	sbci	r18, 0x00	; 0
- 2e8:	80 40       	sbci	r24, 0x00	; 0
- 2ea:	e1 f7       	brne	.-8      	; 0x2e4 <main+0xc4>
- 2ec:	00 c0       	rjmp	.+0      	; 0x2ee <main+0xce>
- 2ee:	00 00       	nop
- 2f0:	ae cf       	rjmp	.-164    	; 0x24e <main+0x2e>
+ 2de:	80 e1       	ldi	r24, 0x10	; 16
+ 2e0:	91 e0       	ldi	r25, 0x01	; 1
+ 2e2:	0e 94 73 00 	call	0xe6	; 0xe6 <uart1_send_strings>
+ 2e6:	9f ef       	ldi	r25, 0xFF	; 255
+ 2e8:	29 e6       	ldi	r18, 0x69	; 105
+ 2ea:	88 e1       	ldi	r24, 0x18	; 24
+ 2ec:	91 50       	subi	r25, 0x01	; 1
+ 2ee:	20 40       	sbci	r18, 0x00	; 0
+ 2f0:	80 40       	sbci	r24, 0x00	; 0
+ 2f2:	e1 f7       	brne	.-8      	; 0x2ec <main+0xcc>
+ 2f4:	00 c0       	rjmp	.+0      	; 0x2f6 <main+0xd6>
+ 2f6:	00 00       	nop
+ 2f8:	aa cf       	rjmp	.-172    	; 0x24e <main+0x2e>
 
-000002f2 <USART1_Init>:
+000002fa <USART1_Init>:
 #include <avr/io.h>
 
  // シリアル通信の設定 (115.2kbps)
  void USART1_Init( void )
  {
 	 UBRR1  = 8; // 動作周波数(Hz) / (ボーレート * 16) - 1
- 2f2:	88 e0       	ldi	r24, 0x08	; 8
- 2f4:	90 e0       	ldi	r25, 0x00	; 0
- 2f6:	90 93 cd 00 	sts	0x00CD, r25	; 0x8000cd <__TEXT_REGION_LENGTH__+0x7f80cd>
- 2fa:	80 93 cc 00 	sts	0x00CC, r24	; 0x8000cc <__TEXT_REGION_LENGTH__+0x7f80cc>
+ 2fa:	88 e0       	ldi	r24, 0x08	; 8
+ 2fc:	90 e0       	ldi	r25, 0x00	; 0
+ 2fe:	90 93 cd 00 	sts	0x00CD, r25	; 0x8000cd <__TEXT_REGION_LENGTH__+0x7f80cd>
+ 302:	80 93 cc 00 	sts	0x00CC, r24	; 0x8000cc <__TEXT_REGION_LENGTH__+0x7f80cc>
 	 UCSR1A = 0b00000000;
- 2fe:	10 92 c8 00 	sts	0x00C8, r1	; 0x8000c8 <__TEXT_REGION_LENGTH__+0x7f80c8>
+ 306:	10 92 c8 00 	sts	0x00C8, r1	; 0x8000c8 <__TEXT_REGION_LENGTH__+0x7f80c8>
 	 UCSR1B = 0b00011000; // 送受信可
- 302:	88 e1       	ldi	r24, 0x18	; 24
- 304:	80 93 c9 00 	sts	0x00C9, r24	; 0x8000c9 <__TEXT_REGION_LENGTH__+0x7f80c9>
+ 30a:	88 e1       	ldi	r24, 0x18	; 24
+ 30c:	80 93 c9 00 	sts	0x00C9, r24	; 0x8000c9 <__TEXT_REGION_LENGTH__+0x7f80c9>
 	 UCSR1C = 0b00000110; // データ8bit, 非同期, パリティなし, Stop 1bit
- 308:	86 e0       	ldi	r24, 0x06	; 6
- 30a:	80 93 ca 00 	sts	0x00CA, r24	; 0x8000ca <__TEXT_REGION_LENGTH__+0x7f80ca>
+ 310:	86 e0       	ldi	r24, 0x06	; 6
+ 312:	80 93 ca 00 	sts	0x00CA, r24	; 0x8000ca <__TEXT_REGION_LENGTH__+0x7f80ca>
 	 //UCSR1D = 0b00000010; // flow control : CTS有効
 	 UCSR1D = 0b00000000; // flow control : CTS無効
- 30e:	10 92 cb 00 	sts	0x00CB, r1	; 0x8000cb <__TEXT_REGION_LENGTH__+0x7f80cb>
- 312:	08 95       	ret
+ 316:	10 92 cb 00 	sts	0x00CB, r1	; 0x8000cb <__TEXT_REGION_LENGTH__+0x7f80cb>
+ 31a:	08 95       	ret
 
-00000314 <UART1_Byte_Send>:
+0000031c <UART1_Byte_Send>:
  }
 
  // UART1へのバイトデータの送信
  void UART1_Byte_Send ( uint8_t data )
  {
 	 while( ( UCSR1A & ( 1 << UDRE1 ) ) == 0 ); // 送信可フラグが立つまで待つ．
- 314:	90 91 c8 00 	lds	r25, 0x00C8	; 0x8000c8 <__TEXT_REGION_LENGTH__+0x7f80c8>
- 318:	95 ff       	sbrs	r25, 5
- 31a:	fc cf       	rjmp	.-8      	; 0x314 <UART1_Byte_Send>
+ 31c:	90 91 c8 00 	lds	r25, 0x00C8	; 0x8000c8 <__TEXT_REGION_LENGTH__+0x7f80c8>
+ 320:	95 ff       	sbrs	r25, 5
+ 322:	fc cf       	rjmp	.-8      	; 0x31c <UART1_Byte_Send>
 	 UDR1 = data;
- 31c:	80 93 ce 00 	sts	0x00CE, r24	; 0x8000ce <__TEXT_REGION_LENGTH__+0x7f80ce>
- 320:	08 95       	ret
+ 324:	80 93 ce 00 	sts	0x00CE, r24	; 0x8000ce <__TEXT_REGION_LENGTH__+0x7f80ce>
+ 328:	08 95       	ret
 
-00000322 <_exit>:
- 322:	f8 94       	cli
+0000032a <_exit>:
+ 32a:	f8 94       	cli
 
-00000324 <__stop_program>:
- 324:	ff cf       	rjmp	.-2      	; 0x324 <__stop_program>
+0000032c <__stop_program>:
+ 32c:	ff cf       	rjmp	.-2      	; 0x32c <__stop_program>
