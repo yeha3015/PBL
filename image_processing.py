@@ -6,6 +6,7 @@ import subprocess
 import socket
 
 # ret, flame = cam.read()
+AREA = "A-1"
 
 
 def cam_init(camnum):
@@ -25,6 +26,9 @@ def UART_init(name, baud_rate, to):
 
 
 def Processing_init(host, port):
+    """
+    socketのinit関数。
+    """
     socket_client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     socket_client.connect((host, port))
     return socket_client
@@ -37,6 +41,13 @@ def UART_read(ser):
     line = ser.readline()
     return line
 
+def remove_ch_line(from_):
+    """
+    byte型の文字列から改行コード\rと\nを取り除く関数。
+    """
+    for old in (b'\r', b'\n'):
+        to_ = from_.replace(old, b'')
+    return to_
 
 def cam_capture(from_):
     """
@@ -46,22 +57,32 @@ def cam_capture(from_):
     cv2.imwrite("data/get_capture.png", flame)
 
 
-def check_data(data):
-    return data == [84, 63, 146]
-
-
 def sct_send(socket_client, n):
     socket_client.send(n.to_bytes(1, "little"))
 
 
-def socket_send(socket_client, n):
+def bytes_send(socket_client, ns):
+    for i in ns:
+        sct_send(socket_client, i)
+
+def byte_send(socket_client, n):
     socket_client.send(n)
+
+
+def str_send(socket_client, str):
+    for i in str:
+        socket_client.send(ord(i).to_bytes(1, "little"))
 
 
 def height_width_send(x, socket_client):
     for i in range(4):
         socket_client.send((x >> (8 * i) & 0xff).to_bytes(1, "little"))
     return 0
+
+
+def ID_send(socket_client, x):
+    for i in range(3):
+        socket_client.send((x >> (8 * i) & 0xff).to_bytes(1, "little"))
 
 
 def image_send(socket_client, img):
@@ -71,7 +92,7 @@ def image_send(socket_client, img):
     print(ih, iw)
     height_width_send(ih, socket_client)
     height_width_send(iw, socket_client)
-    socket_client.recv(1024)
+    print(int.from_bytes(socket_client.recv(16), "little"))
     send_rgb = []
     for iy in range(ih):
         for ix in range(iw):
@@ -79,9 +100,10 @@ def image_send(socket_client, img):
             for i in pixel[::-1]:
                 send_rgb.append(i.to_bytes(1, "little"))
     for i in send_rgb:
-        socket_send(socket_client, i)
+        byte_send(socket_client, i)
+    print("finish image send")
     res = socket_client.recv(1024)
-    # print(res.hex())
+    print(int.from_bytes(socket_client.recv(16), "little"))
     if res.hex() == "02":
         return 1
     return 0
@@ -93,36 +115,32 @@ def main():
     port = 5554
 
     # initialize
-    # ser = UART_init("COM3", 115200, 5)
+    ser = UART_init("COM3", 115200, 5)
     # cam = cam_init(0)
     socket_client = Processing_init(host, port)
     print("start")
-    """
     try:
         while True:
-            data_bytes = UART_read(ser).hex()
-            data_bytes = [0x21, 0x22, 0x23]
-            data = [data_bytes[i:i+2] for i in range(0, 6, 2)]
-            if True:  # fixme: add cond
-                for i in data_bytes:
-                    sct_send(socket_client, i)
+            data_ID = remove_ch_line(UART_read(ser))
+            if int.from_bytes(data_ID, "little") != 0:
+                str_send(socket_client, AREA)
+                time.sleep(0.5)
+                bytes_send(socket_client, data_ID)
+                if int.from_bytes(socket_client.recv(16), "little") == 1:
+                    # print("Area Data Send Complete: " + data_str)
+                    print("a")
+                image_send(socket_client, "img0.jpg")
+            return 0
     except KeyboardInterrupt:
         return 0
-    """
-    send_comp = 0
-    while True:
-        send_comp = image_send(socket_client, "img0.jpg")
-        if send_comp == 1:
-            break
-        time.sleep(10)
-    return 0
 
 
 # check_ID()
-# UART_read_write()
 # cam_read(cam)
 # image_send(Processing_init("127.0.0.1", 5554), "img0.jpg")
 main()
+
+
 
 
 # シリアルポート確認用
@@ -189,3 +207,10 @@ def cam_capture_or_ret(flame):
         cv2.imwrite("data/get_capture.png", flame)
     elif key == 27:
         cv2.destroyAllWindows()
+
+
+def check_data(data):
+    return data == [84, 63, 146]
+
+
+# UART_read_write()

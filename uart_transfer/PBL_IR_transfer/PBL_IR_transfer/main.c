@@ -121,14 +121,16 @@ int main(void)
 			data[i] =  make_byte();
 			_delay_ms(WAIT_TIME_MS);
 		}
-		uint8_t send_data[4] = {0x00, 0x00, 0x00, 0xFF};
 		data[DATA_LENGTH] = '\0';
+		uint8_t send_data[4] = {0x00, 0x00, 0x00, 0xFF};
 		if(!check_signal(data)){
 			uart1_send_strings("Data was broken");
 			uart1_send_strings("\r\n");	
 			continue;
 		}
-		uart1_send_uint8t(make_transit_signal(data, send_data));
+		make_transit_signal(data, send_data);
+		//uart1_send_uint8t(data);
+		uart1_send_uint8t(send_data);
 		uart1_send_strings("\r\n");
 		_delay_ms(500);
     }

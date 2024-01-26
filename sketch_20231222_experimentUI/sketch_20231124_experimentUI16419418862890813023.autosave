@@ -1,0 +1,64 @@
+import controlP5.*;
+ControlP5 cp5;
+
+int State;
+
+void setup()
+{
+	size(1280, 720); //UI解像度
+	
+	cp5 = new ControlP5(this);
+	
+	ControlFont cf1 = new ControlFont(createFont("BIZ UDゴシック", 16));
+
+	cp5.addButton		("EmerCheck") //ボタン押下時の実行関数
+	.setLabel			("緊急・異常確認") //確認ボタンの表示名
+	.setFont			(cf1)
+	.setPosition		(520,550) //確認ボタンの位置
+	.setSize			(240,80) //ボタンのサイズ
+	.setColorActive		(color(0,40))
+	.setColorBackground	(color(#960989))
+	.setColorForeground	(color(#BD0CEA))
+	.setColorCaptionLabel(color(#FBF5FC));
+	
+	State = 0;
+	
+	println("初期状態□□□□□：状態=" + State);
+	
+	PFont font = createFont("BIZ UDゴシック", 50, true); //フォントサイズ
+	textFont(font);
+	fill(0); //テキストカラー
+}
+
+void draw()
+{
+	background(#F5FFFE); //背景色
+	
+	switch(State){
+		case 0 : 
+		  text("確認中", 590, 300); //フォント位置
+		  break;
+		  
+		case 1 :
+		  text("A1", 590, 300);
+		  break;
+		  
+		case 2 :
+		  text("B2", 590, 300);
+		  break;
+		
+		case 3 :
+		  text("C3", 590, 300);
+		  break;
+		
+		default :  
+	}
+}
+
+void EmerCheck()
+{
+	State++;
+	if(State > 3) State = 0;
+	
+	println("図形切り替えの押下：状態=" + State);
+}
